@@ -15,6 +15,13 @@ from koicore.types import KoiString
 from koicore.types import KoiBoolean
 
 
+def python_keyword(value):
+    if value == "true" or value == "false":
+        value = value.title()
+
+    return eval(value)
+
+
 class KoiInterpreter(KoiListener):
     def __init__(self):
         self.variables = {}
@@ -50,12 +57,8 @@ class KoiInterpreter(KoiListener):
             if ctx.type_() is None:
                 # var my := 0
                 # The type isn't inferred
-                value = ctx.true_value().getText()
 
-                if value == "true" or value == "false":
-                    value = value.title()
-
-                type_value = self.type_dict[type(eval(value))]
+                type_value = self.type_dict[type(python_keyword(ctx.true_value().getText()))]
 
             else:
                 # var my: int = 0
@@ -78,3 +81,24 @@ class KoiInterpreter(KoiListener):
         #     print(f"Name: {self.variables[i].name}, Value: {self.variables[i].value}, Type: {self.variables[i].type_}")
 
         # print("---")
+
+    def print_list(self, list_):
+        print_list = []
+
+        for i in list_:
+            if self.variables.get(i.getText()):
+                print_list.append(python_keyword(self.variables[i.getText()].value))
+
+            else:
+                print_list.append(python_keyword(i.getText()))
+
+        return " ".join(print_list)
+
+    def exitPrint_stmt(self, ctx:KoiParser.Print_stmtContext):
+        if ctx.PRINT():
+            list_ = self.print_list(ctx.true_value())
+            print(list_, end="")
+
+        elif ctx.PRINTLN():
+            list_ = self.print_list(ctx.true_value())
+            print(list_)
