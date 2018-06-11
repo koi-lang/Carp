@@ -13,6 +13,7 @@ from koicore import KoiObject
 from koicore.types import KoiInteger
 from koicore.types import KoiString
 from koicore.types import KoiBoolean
+from koicore import KoiException
 
 
 def python_keyword(value):
@@ -39,19 +40,19 @@ class KoiInterpreter(KoiListener):
             # my = 0
             if not self.variables.get(ctx.name().getText()):
                 # Error - variable does not exist
-                print("Error - variable does not exist")
+                KoiException("Error - variable does not exist")
                 sys.exit()
 
             else:
                 if self.variables.get(ctx.name().getText()).final:
                     # Error - reassignment to final
-                    print("Error - reassignment to final")
+                    KoiException("Error - reassignment to final")
                     sys.exit()
 
         else:
             if self.variables.get(ctx.name().getText()):
                 # Error - variable already exists
-                print("Error - variable already exists")
+                KoiException("Error - variable already exists")
                 sys.exit()
 
             if ctx.type_() is None:
