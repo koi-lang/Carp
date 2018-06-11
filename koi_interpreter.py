@@ -103,3 +103,16 @@ class KoiInterpreter(KoiListener):
         elif ctx.PRINTLN():
             list_ = self.print_list(ctx.true_value())
             print(list_)
+
+    def exitInput_stmt(self, ctx:KoiParser.Input_stmtContext):
+        if ctx.INPUT():
+            in_ = input(eval(ctx.text.getText()))
+
+            if ctx.limit:
+                limit = int(ctx.limit.getText())
+
+                if limit > -1 and len(in_) > limit:
+                    KoiException("Error - entered text longer than limit")
+
+        elif ctx.INPUTLN():
+            pass

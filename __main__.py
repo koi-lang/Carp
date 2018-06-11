@@ -9,7 +9,7 @@ from KoiParser import KoiParser
 from koi_interpreter import KoiInterpreter
 
 if __name__ == "__main__":
-    lexer = KoiLexer(antlr4.FileStream("examples/Koi/variables.koi"))
+    lexer = KoiLexer(antlr4.FileStream("examples/Koi/inputs.koi"))
     stream = antlr4.CommonTokenStream(lexer)
     parser = KoiParser(stream)
     tree = parser.program()
